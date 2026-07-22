@@ -4,7 +4,7 @@ const app:Express=express();
 
 app.get("/health",(_req,res)=>{
     res.json({
-        status:'ok',
+        status:'ok!',
         timeStamp: new Date().toISOString()
     })
 });
