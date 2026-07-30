@@ -7,6 +7,7 @@ const adapter = new PrismaPg({
     connectionString: DATABASE_URL
 });
 
+// this is prisma object i.e prisma client object.
 export const prisma = new PrismaClient({
     adapter
 });
