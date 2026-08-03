@@ -10,3 +10,7 @@ export async function findById(req:Request,res:Response){
     res.json(response);
 
 }
+export async function createUser(req: Request, res: Response) {
+    console.log(req.body);
+    res.json({});
+}
