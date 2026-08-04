@@ -1,0 +1,6 @@
+import type { NextFunction } from "express";
+import { notFound } from "../utils/api-error.js"
+
+export const routeNotFound=(req:Request,res:Response,next:NextFunction)=>{
+    next(notFound('Route not found'));
+}
