@@ -1,0 +1,17 @@
+//user related transfer object
+
+import { z } from "zod";
+
+export const createUserSchema=z.object({
+    //z have lots of validators and object creation finctionality.
+    //chain validation
+    //pass messge that trigger upon failure.
+    email: z.email('Invalid email address'),
+    name: z.string().min(1, 'Name is required').max(100, 'Name must be less than 100 characters'),
+
+});
+
+//using this zod schema we can create type or a class or a interface.which can represent the JSON object in the typescript world
+
+export type CreateUserDto = z.infer<typeof createUserSchema>;
+//it takes zod schema and spits out valid typescript type.

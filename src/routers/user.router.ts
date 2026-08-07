@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { createUser, findAllUsers, findById } from "../controllers/user.controller.js";
+import { validate } from "../middlewares/validate.js";
+import { createUserSchema } from "../dtos/user.dto.js";
 
 export const userRouter:Router=Router();//router object
 //in this userRouter you can configure your routes
@@ -9,4 +11,4 @@ userRouter.get('/',findAllUsers);
 userRouter.get('/:id',findById); 
 //yaha se controllet and service dono ko call lag sakti hai
 //but ham controller ko kerenge(in some project controller and routers could be merged).
-userRouter.post('/',createUser);
+userRouter.post('/',validate(createUserSchema),createUser);
