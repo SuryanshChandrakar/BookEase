@@ -15,3 +15,13 @@ export const createUserSchema=z.object({
 
 export type CreateUserDto = z.infer<typeof createUserSchema>;
 //it takes zod schema and spits out valid typescript type.
+
+export const updateUserSchema = z.object({
+    email: z.email('Invalid email address').optional(),
+    name: z.string().min(1, 'Name is required').max(100, 'Name must be less than 100 characters').optional(),
+}).refine((data) => data.email !== undefined || data.name !== undefined, {
+    message: 'At least one field must be provided',
+});
+
+
+export type UpdateUserDto = z.infer<typeof updateUserSchema>;
