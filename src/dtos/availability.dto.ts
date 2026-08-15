@@ -3,7 +3,7 @@ import { z } from "zod";
 const timeRegex = /^([01]\d|2[0-3]):[0-5]\d$/;
 const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
 
-export const createAvailabilityRuleSchema = z.object({
+const createAvailabilityRuleBaseSchema = z.object({
     weekday: z.number().int().min(0).max(6),
     startTime: z.string().regex(timeRegex, "Start time must be in HH:mm format"),
     endTime: z.string().regex(timeRegex, "End time must be in HH:mm format"),
@@ -11,8 +11,16 @@ export const createAvailabilityRuleSchema = z.object({
     timezone: z.string().default("UTC"),
 });
 
+//taking base schema and using refine add a custome rule over it.
+//one base schema and we can derive multiple rule based schema
+export const createAvailabilityRuleSchema = createAvailabilityRuleBaseSchema.refine(
+    (rule) => rule.startTime < rule.endTime,
+    { message: "Start time must be before end time" }
+);
+
 export const updateAvailabilityRuleSchema = createAvailabilityRuleSchema.partial();
 
+//Superrefine
 export const createAvailabilityExceptionSchema = z.object({
     date: z.string().regex(dateRegex, "Date must be in YYYY-MM-DD format"),
     type: z.enum(["BLOCK_FULL_DAY", "BLOCK_PARTIAL", "ADD_AVAILABLE_WINDOW"]),
@@ -20,7 +28,19 @@ export const createAvailabilityExceptionSchema = z.object({
     endTime: z.string().regex(timeRegex, "End time must be in HH:mm format").optional(),
     timezone: z.string().default("UTC"),
     reason: z.string().max(500).optional(),
-});
+}).superRefine((data, ctx) => {
+    if(data.type !== 'BLOCK_FULL_DAY') {
+        if(!data.startTime) {
+            ctx.addIssue({ path: ['startTime'], code: 'custom', message: "Start time is required for a non-full day exception"})
+        }
+        if(!data.endTime) {
+            ctx.addIssue({ path: ['endTime'], code: 'custom', message: "End time is required for a non-full day exception"})
+        }
+        if(data.startTime && data.endTime && data.startTime >= data.endTime) {
+            ctx.addIssue({ path: ['endTime'], code: 'custom', message: "End time must be after start time"})
+        }
+    }
+})
 
 export const updateAvailabilityExceptionSchema = createAvailabilityExceptionSchema.partial();
 
