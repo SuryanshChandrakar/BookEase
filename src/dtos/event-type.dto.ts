@@ -10,7 +10,7 @@ export const createEventTypeSchema = z.object({
     bufferBeforeMinutes: z.number().min(0).max(120).default(0),
     bufferAfterMinutes: z.number().min(0).max(120).default(0),
     //slug is not optional so added in  other wise error
-    slug: z.string().min(1).max(100).regex(/^[a-z0-9-]+$/, 'Slug may only contain lowercase letters, numbers, and hyphens'),
+    slug: z.string().min(1).max(100).regex(/^[a-z0-9-]+$/, 'Slug may only contain lowercase letters, numbers, and hyphens').optional(),
 });
 
 export const UpdateEventTypeSchema = createEventTypeSchema.partial();//any subset of the above properties

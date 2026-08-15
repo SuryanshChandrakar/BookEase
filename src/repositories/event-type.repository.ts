@@ -1,5 +1,6 @@
 import { prisma } from "../config/database.js";
 import type{ CreateEventTypeDto, UpdateEventTypeDto } from "../dtos/event-type.dto.js";
+import { notFound } from "../utils/api-error.js";
 
 export async function findByHostId(hostId: number) {
     const eventTypes = await prisma.eventType.findMany({
@@ -23,7 +24,7 @@ export async function getById(id: number) {
 }
 
 //sepeartly passing host id not part of our DTO.
-export async function create(hostId: number, data: CreateEventTypeDto) {
+export async function create(hostId: number, data: CreateEventTypeDto &{slug: string}) {
     const eventType = await prisma.eventType.create({
         //unpack the data then attach hostid to it
         //this data is property of prisma .
@@ -59,6 +60,21 @@ export async function findByHostAndSlug(hostId: number, slug: string) {
     });
     return eventType;
 }
+
+
+export async function findActiveByHostIdAndEventSlug(hostId: number, slug: string) {
+    const eventType = await prisma.eventType.findFirst({
+        where: {
+            isActive: true,
+            slug,
+            hostId: hostId
+        }
+    });
+    return eventType;
+
+}
+
+
 
 // write a function to check if a slug already exists for a user 
 export async function slugExistsForHost(hostId: number, slug: string) {
