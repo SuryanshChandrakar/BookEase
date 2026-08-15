@@ -1,4 +1,8 @@
 import express, {type Express} from 'express';
+
+import { eventTypeRouter } from './routers/event-type.router.js';
+import { publicEventRouter } from './routers/public-event.router.js';
+
 import { userRouter } from './routers/user.router.js';
 import { errorHandler } from './middlewares/error-handler.js';
 import { routeNotFound } from './middlewares/route-not-found.js';
@@ -19,6 +23,9 @@ app.get("/health",(_req,res)=>{
 });
 
 app.use("/api/users",userRouter);//if the Route starts with /users, userRouter Will handle it.
+
+app.use('/api/event-types', eventTypeRouter);
+app.use('/api/public', publicEventRouter);
 
 //this is not error handling middle ware its normal one;
 app.use(routeNotFound);
