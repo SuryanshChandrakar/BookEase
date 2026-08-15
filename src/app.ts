@@ -6,6 +6,8 @@ import { publicEventRouter } from './routers/public-event.router.js';
 import { userRouter } from './routers/user.router.js';
 import { errorHandler } from './middlewares/error-handler.js';
 import { routeNotFound } from './middlewares/route-not-found.js';
+
+import { availabilityRouter } from './routers/availability.router.js';
 //import { ApiError } from './utils/api-error.js';
 //import type {Express} from 'express';
 const app:Express=express();
@@ -26,6 +28,8 @@ app.use("/api/users",userRouter);//if the Route starts with /users, userRouter W
 
 app.use('/api/event-types', eventTypeRouter);
 app.use('/api/public', publicEventRouter);
+
+app.use('/api/availability', availabilityRouter);
 
 //this is not error handling middle ware its normal one;
 app.use(routeNotFound);

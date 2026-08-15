@@ -18,9 +18,20 @@ export const createAvailabilityRuleSchema = createAvailabilityRuleBaseSchema.ref
     { message: "Start time must be before end time" }
 );
 
-export const updateAvailabilityRuleSchema = createAvailabilityRuleSchema.partial();
+//you cant put partial on refined schema.!!! make a base schema and use it same mistake (2 place)
+export const updateAvailabilityRuleSchema = createAvailabilityRuleBaseSchema.partial();
 
-//Superrefine
+
+export const availabilityExceptionBaseSchema = z.object({
+    date: z.string().regex(dateRegex, "Date must be in YYYY-MM-DD format"),
+    type: z.enum(["BLOCK_FULL_DAY", "BLOCK_PARTIAL", "ADD_AVAILABLE_WINDOW"]),
+    startTime: z.string().regex(timeRegex, "Start time must be in HH:mm format").optional(),
+    endTime: z.string().regex(timeRegex, "End time must be in HH:mm format").optional(),
+    timezone: z.string().default("UTC"),
+    reason: z.string().max(500).optional(),
+});
+
+
 export const createAvailabilityExceptionSchema = z.object({
     date: z.string().regex(dateRegex, "Date must be in YYYY-MM-DD format"),
     type: z.enum(["BLOCK_FULL_DAY", "BLOCK_PARTIAL", "ADD_AVAILABLE_WINDOW"]),
@@ -42,7 +53,7 @@ export const createAvailabilityExceptionSchema = z.object({
     }
 })
 
-export const updateAvailabilityExceptionSchema = createAvailabilityExceptionSchema.partial();
+export const updateAvailabilityExceptionSchema = availabilityExceptionBaseSchema.partial();
 
 export type CreateAvailabilityRuleDto = z.infer<typeof createAvailabilityRuleSchema>;
 export type UpdateAvailabilityRuleDto = z.infer<typeof updateAvailabilityRuleSchema>;
