@@ -29,7 +29,7 @@ export async function findByEmail(email: string) {
 }
 
 //it expects data of type createUserDto,this type is created using ZOD Schema prepated in DTO folder.
-export async function create(data: CreateUserDto) {
+export async function create(data: CreateUserDto & { slug: string }) {
     const user = await prisma.user.create({
         data
     });

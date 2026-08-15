@@ -57,6 +57,7 @@ model EventType {
 
 // 6PM - 6:30PM , 15 min buffer -> next 6:45 onwards
 
+// a user has many availability rules,but one rule belong to one user.
 model AvailabilityRule {
   id        Int      @id @default(autoincrement())
   userId    Int
@@ -73,6 +74,9 @@ model AvailabilityRule {
   @@map("availability_rules")
 }
 
+//day/date holiday.
+//user:Exception 1:n ↔n:1(rev)
+//type :full day(then no start and end time) or specific period 
 model AvailabilityException {
   id        Int      @id @default(autoincrement())
   userId    Int
@@ -91,6 +95,7 @@ model AvailabilityException {
   @@map("availability_exceptions")
 }
 
+//a event has many slots 
 model Slot {
   id          Int      @id @default(autoincrement())
   hostId      Int

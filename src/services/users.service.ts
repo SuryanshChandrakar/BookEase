@@ -1,3 +1,4 @@
+import slug from "slug";
 import type { CreateUserDto, UpdateUserDto } from "../dtos/user.dto.js";
 import { create, findByEmail, getAll, getById, remove, update } from "../repositories/user.repository.js";
 import { conflict, notFound } from "../utils/api-error.js";
@@ -24,8 +25,8 @@ export async function createUser(data: CreateUserDto) {
     if(existingUser) {
         throw conflict('User already exists');
     }
-
-    return create(data);
+    const slugPassed = data.slug ? data.slug : slug(data.name, { lower: true }); // todo: make the slug unique
+    return create({...data, slug: slugPassed});
 }
 
 export async function updateUser(id: number, data: UpdateUserDto) {
