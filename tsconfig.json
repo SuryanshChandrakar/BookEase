@@ -22,7 +22,7 @@
     "declarationMap": true,
 
     // Stricter Typechecking Options
-    "noUncheckedIndexedAccess": true,
+    //"noUncheckedIndexedAccess": true,//ts will treat undefined as null
     //"exactOptionalPropertyTypes": true,
 
     // Style Options
