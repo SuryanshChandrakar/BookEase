@@ -3,13 +3,14 @@ import type{ CreateEventTypeDto, UpdateEventTypeDto } from "../dtos/event-type.d
 import { create, findActiveByHostIdAndEventSlug, findByHostAndSlug, findByHostId, getById, remove, slugExistsForHost,update} from "../repositories/event-type.repository.js";
 import { conflict, forbidden, notFound } from "../utils/api-error.js";
 import { getById as getUserById } from "../repositories/user.repository.js";
-
+import { startRegenerateHostSlotsWorkflow } from "../temporal/client.js";
 
 export async function listEventTypes(hostId: number) {
     const eventTypes = await findByHostId(hostId);
     return eventTypes;
 }
 
+//this is the place where we are creating the event 
 export async function createEventType(hostId: number, data: CreateEventTypeDto) {
     const slugPassed = data.slug ?? slug(data.title, { lower: true });
 
@@ -22,7 +23,9 @@ export async function createEventType(hostId: number, data: CreateEventTypeDto) 
         throw conflict('A event type with this slug already exists, please use a different slug');
     }
 
-    return create(hostId, {...data, slug: slugPassed});
+    const eventType = create(hostId, {...data, slug: slugPassed});
+    await startRegenerateHostSlotsWorkflow({ hostId });
+    return eventType;
 }
 
 

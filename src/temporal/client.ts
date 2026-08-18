@@ -33,7 +33,7 @@ async function startWorkflow(
 }
 // From anywhere in the code if I want to run host  Slots create mechanism I will call this function. it will run and start this workflow in temporal and our job will be done.
 //temporal will then get the client Start the workflow in the queue and take activity??
-export async function regenerateHostSlotsWorkflow(input: RegenerateHostSlotsInput) { // async mech. to generate your workflow.
+export async function startRegenerateHostSlotsWorkflow(input: RegenerateHostSlotsInput) { // async
     return startWorkflow(
         'regenerateHostSlotsWorkflow',
         `regenerate-host-slots-${input.hostId}-${Date.now()}`,

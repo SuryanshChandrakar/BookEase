@@ -25,6 +25,8 @@ export async function getById(id: number) {
 
 //sepeartly passing host id not part of our DTO.
 export async function create(hostId: number, data: CreateEventTypeDto &{slug: string}) {
+    console.log('Creating event type', data);
+    console.log('Host ID', hostId);
     const eventType = await prisma.eventType.create({
         //unpack the data then attach hostid to it
         //this data is property of prisma .
