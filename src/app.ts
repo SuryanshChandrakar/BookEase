@@ -8,6 +8,7 @@ import { errorHandler } from './middlewares/error-handler.js';
 import { routeNotFound } from './middlewares/route-not-found.js';
 
 import { availabilityRouter } from './routers/availability.router.js';
+import { bookingRouter } from './routers/booking.router.js';
 //import { ApiError } from './utils/api-error.js';
 //import type {Express} from 'express';
 const app:Express=express();
@@ -30,6 +31,8 @@ app.use('/api/event-types', eventTypeRouter);
 app.use('/api/public', publicEventRouter);
 
 app.use('/api/availability', availabilityRouter);
+
+app.use('/api/bookings', bookingRouter);
 
 //this is not error handling middle ware its normal one;
 app.use(routeNotFound);
